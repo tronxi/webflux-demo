@@ -1,6 +1,5 @@
 package com.tronxi.webfluxdemo.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,10 +11,8 @@ public class Demo {
 
     public Demo(String title) {
         try {
-            if(title.equals("hola"))
-                Thread.sleep(3000);
-            if(title.equals("tal"))
-                Thread.sleep(2000);
+            if(Long.parseLong(title) % 2 == 0)
+                Thread.sleep((long) (Math.random() * 7) + 1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
