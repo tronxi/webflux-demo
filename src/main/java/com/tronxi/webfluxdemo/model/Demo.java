@@ -17,9 +17,9 @@ public class Demo {
 
     public Demo process() {
         try {
-            if(title.equals("5"))
+            if(title.equals("1") || title.equals("2"))
                 Thread.sleep(2000);
-            if(title.equals("a"))
+            if(title.equals("3"))
                 Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
