@@ -1,36 +1,42 @@
 package com.tronxi.webfluxdemo.controller;
 
 import com.tronxi.webfluxdemo.model.Demo;
+import com.tronxi.webfluxdemo.service.DemoService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
-
-import java.time.Duration;
 
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping(path = "webflux")
+@RequiredArgsConstructor
 public class WebfluxDemoController {
 
-    @GetMapping("/demo")
-    public Flux<Demo> getDemo() {
-        return getFlux();
-    }
-    @GetMapping(value = "/demo/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<Demo> getDemoStream() {
-        return getFlux();
+    private final DemoService demoService;
+
+    @GetMapping(value = "/demo/parallel")
+    public Flux<Demo> getDemoParallel() {
+        return demoService.findAllParallel();
     }
 
-    private Flux<Demo> getFlux() {
-        return Flux.interval(Duration.ofSeconds(0))
-                .take(10)
-                .flatMap(str -> Mono.just(str.toString())
-                        .map(Demo::new)
-                        .subscribeOn(Schedulers.parallel()));
+    @GetMapping(value = "/demo")
+    public Flux<Demo> getDemo() {
+        return demoService.findAll();
     }
+
+    @GetMapping(value = "/demo/parallel/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<Demo> getDemoParallelStream() {
+        return demoService.findAllParallel();
+    }
+
+    @PostMapping(value = "/demo")
+    public Mono<ResponseEntity<Demo>> postDemo(@RequestBody Demo demo) {
+        return demoService.insert(demo)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
 }
