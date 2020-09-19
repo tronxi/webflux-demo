@@ -9,6 +9,6 @@ notifications:
     recipients:
       - sergio.gsanchez97@gmail.com
 install:
-  - mvn install -Dmaven.javadoc.skipt=true -B - V
+  - mvn install -Dmaven.javadoc.skipt=true -B -V
 script:
   - mvn verify
