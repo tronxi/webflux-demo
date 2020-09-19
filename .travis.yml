@@ -13,3 +13,9 @@ install:
   - mvn verify sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=tronxi -Dsonar.login=$sonar
 script:
   - mvn verify
+deploy:
+  app: tronxi-webflux-demo
+  provider: heroku
+  api_key: $HEROKU
+  on:
+    branch: master
